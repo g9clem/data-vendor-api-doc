@@ -20,6 +20,7 @@ The table below specifies all accepted fields and its format:
 
 
 |Column|Name|Description|Format|Valid Values/Range|Example|Mandatory|
+|---|---|---|---|---|---|---|
 1|idfa|unique mobile advertiser ID of the device|string, unhashed|Raw IDFA (iOS) or AAID (Android) value.|Input string should be lower cased.|d0798276-abb4-4250-ac08-bb4b2b36ec4e|*
 2|lat|latitiude of the device|signed decimal number|[-90.0, 90.0]|43.8772796|*
 3|lng|longitude of the device|signed decimal number|[-180.0, 180.0]|-79.0464828|*
