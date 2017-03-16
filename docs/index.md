@@ -249,32 +249,7 @@ Secure FTP credentials will be provided to you by your account representative wh
 ### 2.2 Batch Data File Contents
 Customer data should NOT contain any information that does not comply with the Freckle IoT privacy policy.
 
-### 2.3 Naming Your File
-Before uploading your data make sure that you are applying the following formatting rules when generating your files names and folder structure.
-
-```
-File Format:          gzip
-Filename Prefix:      <year>-<month>-<day>_
-Example:              2017-03-14_arbor_data.json.gz
-
-Data Format:          JSON or CSV
-Note:                 For CSV please have column name at the first line of each file.
-
-Folder Structure:     <year>/<month>/
-example:              2017/03/2017-03-14_arbor_data.json.gz
-```
-
-### 2.4 File Format
-Mobile location data must be formatted as text files, with one line per record and Tab characters delimited fields. Character encoding should be UTF-8. Lines should be terminated with the newline character (0xA). Carriage return characters (0xD) are permitted and can act as part of the line termination.
-The delimiter between the columns is comma (,). If a column can have multiple valid values, those values need to be delimited by a comma.
-
-Recommended Device ID format is raw and un-hashed. If hashed values are provided, hashing algorithm must be either MD5 or SHA-1.
-
-To maximize data accuracy, each record must contain the following:
-*Unique Mobile Advertising ID, which represents the device and persists across files. For iOS this is the IDFA, for Android it is the AAID.
-*Geo data such as lat, long, horizontal accuracy, and timestamp of the event.
-
-## 2.5 Formatting Your Data
+## 2.3 Formatting Your Data
 
 The table below specifies all accepted fields and its format:
 
@@ -300,6 +275,31 @@ The table below specifies all accepted fields and its format:
 If a column is missing data then an empty string needs to be passed for it.
 
 Examples:
+```
 618075d8-63a5-4b3f-b3c6-a6e9b22b4d86,34.2421234,-124.234245,1439375687000,android,ASUS_Z00TD,21,com.android.chrome 48.0.2564.95,verizon,America/Toronto,Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G),28.6,15.4,90,120.3,23
 48.0.2564.95,verizon,,28.6,15.4,90,120.3,23
 48.0.2564.95,verizon,,,,,,
+```
+
+### 2.4 Naming Your File
+Before uploading your data make sure that you are applying the following formatting rules when generating your files names and folder structure.
+
+```
+File Format:          gzip
+Filename Prefix:      <year>-<month>-<day>_
+Example:              2017-03-14_arbor_data.json.gz
+
+Data Format:          JSON or CSV
+Note:                 For CSV please have column name at the first line of each file.
+
+Folder Structure:     <year>/<month>/
+example:              2017/03/2017-03-14_arbor_data.json.gz
+```
+
+### 2.5 Compression
+Files should be compressed using gzip compression in order to save space and time for transfer. Each data file should be compressed individually. A ```.gz``` file suffix component should be added if the file is compressed. 
+
+```
+Example: 2017-03-14_arbor_data.json.gz
+```
+
