@@ -1,12 +1,255 @@
-## Data Processing
+# Sending Device Location Data to Freckle
 
-### Secure FTP Site
+## 1. Data Transfer Using API
+This document outlines the communication between 3rd party data vendor and Freckle through Freckle REST API. The endpoints consist of 4 types, generic geolocation-based, beacon enter event, beacon exit event and device triggered visit event.
+
+The Freckle REST API uses the OAuth 2.0 protocol to authorize calls. OAuth is an industry-standard open standard for authorization used by many companies to provide secure access to protected resources.  The following steps are needed to obtain authorization to access Freckle REST API.
+
+1. Register with Freckle (contact your Freckle representative) to obtain a set of credentials (client_id and secret) that you use to authenticate your API calls using the OAuth 2.0 protocol
+2.Obtain an access token for your application by sending a request to the Freckle API endpoint using HTTP Basic Auth with your application credentials obtained as described above.  The client_id and secret becomes your user-id and password in HTTP Basic Auth.
+3.For all API calls you will need to add the access token in the 'Authorization' header using the syntax defined below.
+Note: The Freckle-issued access tokens will expire after 24 hours of inactivity.
+
+### 1.1 All Requests
+**Headers for All Requests**
+```
+Authorization: Bearer <Access-token>      // Auth header to provide api key
+```
+
+***Header Notes***
+* All fields in the header are required.
+* Contact your Freckle representative for authorization API Key.
+* HTTP headers are case-insensitive, query string parameters are case-sensitive. 
+* Source http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2 , http://tools.ietf.org/html/rfc7230#section-2.7.3
+
+
+### 1.2 Endpoints
+**Base URL**
+```
+https://api.freckle.com
+```
+#### 1.2.1 /geolocation
+Endpoint for data vendor to send Freckle geolocation-based data that is not associated with beacon events.  All required fields are indicated in their description.
+
+**Request Method: POST**
+```
+{
+  "device_info": {                // The device information
+    "platform": "android|ios",    // *The Device platform (required)
+    "idfa": "device identifier",  // *Device Identifier (IDFA or AAID) (required)
+    "model": "asus ASUS_Z00TD",   // The model of the device
+    "os_version": "21",           // The device's OS version
+ },
+  "fingerprint": {
+    "browser": "com.android.chrome 48.0.2564.95",
+    "carrier": "TELUS",
+    "device_fingerprint": "asus/WW_Z00T/ASUS_Z00T:5.0.2/LRX22G/release-keys",
+    "time_zone": "America/Toronto",
+    "user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G)"
+  },
+  "location": {                      // The device's location details
+    "lat": 43.8772796,               // *Latitude of the device (required)
+    "lng": -79.0464828,              // *Longitude of the device (required)
+    "time": 1455596905979,           // *Device's time (required)
+    "horizontal_accuracy": 28.6,     // *Device's location accuracy from the OS (req)
+    "vertical_accuracy": 15.3,       // Device's location accuracy from the OS
+    "provider": "gps|network|other", // Device's location provider source
+    "bearing": 0,                    // Device's bearing
+    "altitude": 0,                   // Device's altitude as reported by the OS
+    "speed_ms": 0                    // Device's speed in m/s
+  }
+}
+```
+
+**Response Method: POST**
+```
+{
+  "status": {
+    "success": true|false,      // Boolean to success or failure.
+    "message": "Some message"   // An optional message related to the response.
+  } 
+}
+```
+```
+200  Success - Message: OK
+401 Unauthorized - Message: Unauthorized
+400 Bad Request - Message: <<Field name invalid or missing>>
+500 Server Error - Message: Internal Server Error
+```
+
+
+#### 1.2.2 /enter
+Endpoint for data vendor to send Freckle beacon enter events.  All required fields are indicated in their description.
+**Request Method: POST**
+```
+{
+  "device_info": {                 // The device information
+    "platform": "android|ios",     // *The Device platform (required)
+    "idfa": "device identifier",   // *Device Identifier (IDFA or AAID) (required)
+    "model": "asus ASUS_Z00TD",    // The model of the device
+    "os_version": "21",            // The device's OS version
+  },
+  "beacon": {                        // Beacon info
+    "type": "beacon|virtual beacon", // Identify beacon type (optional)                                                
+    "uuid": "UUID",
+    "major": 20,                     //Beacon major (optional)
+    "minor": 20                     // Beacon minor (optional)
+  },
+  "fingerprint": {
+    "browser": "com.android.chrome 48.0.2564.95",
+    "carrier": "TELUS",
+    "device_fingerprint": "asus/WW_Z00T/ASUS_Z00T:5.0.2/LRX22G//release-keys",
+    "time_zone": "America/Toronto",
+    "user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G)"
+  },
+  "location": {                      // The device's location details
+    "lat": 43.8772796,               // *Latitude of the device (required)
+    "lng": -79.0464828,              // *Longitude of the device (required)
+    "time": 1455596905979,           // *Device's time (required)
+    "horizontal_accuracy": 28.6,     // *Device's location accuracy from the OS (req)
+    "vertical_accuracy": 15.3,       // Device's location accuracy from the OS
+    "provider": "gps|network|other", // Device's location provider source
+    "bearing": 0,                    // Device's bearing
+    "altitude": 0,                   // Device's altitude as reported by the OS
+    "speed_ms": 0                    // Device's speed in m/s
+  }
+}
+```
+
+**Response Method: POST**
+```
+{
+  "status": {
+    "success": true|false,      // Boolean to success or failure.
+    "message": "Some message"   // An optional message related to the response.
+  }
+}
+```
+```
+200  Success - Message: OK
+401 Unauthorized - Message: Unauthorized
+400 Bad Request - Message: <<Field name invalid or missing>>
+500 Server Error - Message: Internal Server Error
+```
+
+#### 1.2.3 /exit
+Endpoint for data vendor to send Freckle beacon exit events.  All required fields are indicated in their description.
+**Request Method: POST**
+```
+{
+  "device_info": {                 // The device information
+    "platform": "android|ios",     // *The Device platform (required)
+    "idfa": "device identifier",   // *Device Identifier (IDFA or AAID) (required)
+    "model": "asus ASUS_Z00TD",    // The model of the device
+    "os_version": "21",            // The device's OS version
+  },
+  "beacon": {                        // Beacon info
+    "type": "beacon|virtual beacon", // Identify beacon type (optional)                                                
+    "uuid": "UUID",
+    "major": 20,                    //Beacon major (optional)
+    "minor": 20                     //Beacon minor (optional)
+  },
+  "fingerprint": {
+    "browser": "com.android.chrome 48.0.2564.95",
+    "carrier": "TELUS",
+    "device_fingerprint": "asus/WW_Z00T/ASUS_Z00T:5.0.2/LRX22G//release-keys",
+    "time_zone": "America/Toronto",
+    "user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G)"
+  },
+  "location": {                      // The device's location details
+    "lat": 43.8772796,               // *Latitude of the device (required)
+    "lng": -79.0464828,              // *Longitude of the device (required)
+    "time": 1455596905979,           // *Device's time (required)
+    "horizontal_accuracy": 28.6,     // *Device's location accuracy from the OS (req)
+    "vertical_accuracy": 15.3,       // Device's location accuracy from the OS
+    "provider": "gps|network|other", // Device's location provider source
+    "bearing": 0,                    // Device's bearing
+    "altitude": 0,                   // Device's altitude as reported by the OS
+    "speed_ms": 0                    // Device's speed in m/s
+  }
+}
+```
+
+**Response Method: POST**
+```
+{
+  "status": {
+    "success": true|false,      // Boolean to success or failure.
+    "message": "Some message"   // An optional message related to the response.
+  }
+}
+```
+```
+200  Success - Message: OK
+401 Unauthorized - Message: Unauthorized
+400 Bad Request - Message: <<Field name invalid or missing>>
+500 Server Error - Message: Internal Server Error
+```
+
+#### 1.2.4 /visit
+Endpoint for data vendor to send Freckle device triggered visit events.  All required fields are indicated in their description.
+
+**Request Method: POST**
+```
+{
+  "device_info": {                 // The device information
+    "platform": "android|ios",     // *The Device platform (required)
+    "idfa": "device identifier",   // *Device Identifier (IDFA or AAID) (required)
+    "model": "asus ASUS_Z00TD",    // The model of the device
+    "os_version": "21",            // The device's OS version
+  },
+  "visit": {
+    "visit_type": "arrive"|"depart",       // *Required
+    "arrival_time": 1455596905979,   // *Time of arrival (required)
+    "departure_time": 1455596905979 // *Time of departure (required if type = depart)
+  },
+  "fingerprint": {
+    "browser": "com.android.chrome 48.0.2564.95",
+    "carrier": "TELUS",
+    "device_fingerprint": "asus/WW_Z00T/ASUS_Z00T:5.0.2/LRX22G//release-keys",
+    "time_zone": "America/Toronto",
+    "user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G)"
+  },
+  "location": {                      // The device's location details
+    "lat": 43.8772796,               // *Latitude of the device (required)
+    "lng": -79.0464828,              // *Longitude of the device (required)
+    "time": 1455596905979,           // *Device's time (required)
+    "horizontal_accuracy": 28.6,     // *Device's location accuracy from the OS (req)
+    "vertical_accuracy": 15.3,       // Device's location accuracy from the OS
+    "provider": "gps|network|other", // Device's location provider source
+    "bearing": 0,                    // Device's bearing
+    "altitude": 0,                   // Device's altitude as reported by the OS
+    "speed_ms": 0                    // Device's speed in m/s
+  }
+}
+```
+
+**Response Method: POST**
+```
+{
+  "status": {
+    "success": true|false,      // Boolean to success or failure.
+    "message": "Some message"  // An optional message related to the response.
+  }
+}
+```
+```
+200  Success - Message: OK
+401 Unauthorized - Message: Unauthorized
+400 Bad Request - Message: <<Field name invalid or missing>>
+500 Server Error - Message: Internal Server Error
+```
+
+
+## 2. Data Transfer Using SFTP
+
+### 2.1 Secure FTP Site
 Secure FTP credentials will be provided to you by your account representative when your account is created.
 
-### Batch Data File Contents
+### 2.2 Batch Data File Contents
 Customer data should NOT contain any information that does not comply with the Freckle IoT privacy policy.
 
-### File Format
+### 2.3 File Format
 Mobile location data must be formatted as text files, with one line per record and Tab characters delimited fields. Character encoding should be UTF-8. Lines should be terminated with the newline character (0xA). Carriage return characters (0xD) are permitted and can act as part of the line termination.
 The delimiter between the columns is comma (,). If a column can have multiple valid values, those values need to be delimited by a comma.
 
@@ -17,7 +260,6 @@ To maximize data accuracy, each record must contain the following:
 *Geo data such as lat, long, horizontal accuracy, and timestamp of the event.
 
 The table below specifies all accepted fields and its format:
-
 
 |Column|Name|Description|Format|Valid Values/Range|Example|Mandatory|
 |---|---|---|---|---|---|---|
@@ -37,4 +279,3 @@ The table below specifies all accepted fields and its format:
 14|bearing|device's compass bearing|signed decimal number|[-180.0, 180.0]|90
 15|altitude|device's altitude |unsigned decimal number|120.3
 16|speed_ms|device's speed in meters per second|unsigned decimal number |23
-
