@@ -277,8 +277,10 @@ If a column is missing data then an empty string needs to be passed for it.
 Examples:
 ```
 618075d8-63a5-4b3f-b3c6-a6e9b22b4d86,34.2421234,-124.234245,1439375687000,android,ASUS_Z00TD,21,com.android.chrome 48.0.2564.95,verizon,America/Toronto,Dalvik/2.1.0 (Linux; U; Android 5.0.2; ASUS_Z00TD Build/LRX22G),28.6,15.4,90,120.3,23
-48.0.2564.95,verizon,,28.6,15.4,90,120.3,23
-48.0.2564.95,verizon,,,,,,
+
+618075d8-63a5-4b3f-b3c6-a6e9b22b4d86,34.2421234,-124.234245,1439375687000,android,,,,28.6,15.4,90,120.3,23
+
+618075d8-63a5-4b3f-b3c6-a6e9b22b4d86,34.2421234,-124.234245,1439375687000,,,,,,,,,23
 ```
 
 ### 2.4 Naming Your File
