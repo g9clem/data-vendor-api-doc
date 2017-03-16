@@ -1,13 +1,13 @@
 # Sending Device Location Data to Freckle
 
-## 1. Data Transfer Using API
+## 1. Data Transfer Using The API
 This document outlines the communication between 3rd party data vendor and Freckle through Freckle REST API. The endpoints consist of 4 types, generic geolocation-based, beacon enter event, beacon exit event and device triggered visit event.
 
 The Freckle REST API uses the OAuth 2.0 protocol to authorize calls. OAuth is an industry-standard open standard for authorization used by many companies to provide secure access to protected resources.  The following steps are needed to obtain authorization to access Freckle REST API.
 
 1. Register with Freckle (contact your Freckle representative) to obtain a set of credentials (client_id and secret) that you use to authenticate your API calls using the OAuth 2.0 protocol
-2.Obtain an access token for your application by sending a request to the Freckle API endpoint using HTTP Basic Auth with your application credentials obtained as described above.  The client_id and secret becomes your user-id and password in HTTP Basic Auth.
-3.For all API calls you will need to add the access token in the 'Authorization' header using the syntax defined below.
+2. Obtain an access token for your application by sending a request to the Freckle API endpoint using HTTP Basic Auth with your application credentials obtained as described above.  The client_id and secret becomes your user-id and password in HTTP Basic Auth.
+3. For all API calls you will need to add the access token in the 'Authorization' header using the syntax defined below.
 Note: The Freckle-issued access tokens will expire after 24 hours of inactivity.
 
 ### 1.1 All Requests
@@ -24,6 +24,7 @@ Authorization: Bearer <Access-token>      // Auth header to provide api key
 
 
 ### 1.2 Endpoints
+
 **Base URL**
 ```
 https://api.freckle.com
@@ -71,7 +72,7 @@ Endpoint for data vendor to send Freckle geolocation-based data that is not asso
 }
 ```
 ```
-200  Success - Message: OK
+200 Success - Message: OK
 401 Unauthorized - Message: Unauthorized
 400 Bad Request - Message: <<Field name invalid or missing>>
 500 Server Error - Message: Internal Server Error
@@ -126,7 +127,7 @@ Endpoint for data vendor to send Freckle beacon enter events.  All required fiel
 }
 ```
 ```
-200  Success - Message: OK
+200 Success - Message: OK
 401 Unauthorized - Message: Unauthorized
 400 Bad Request - Message: <<Field name invalid or missing>>
 500 Server Error - Message: Internal Server Error
@@ -180,7 +181,7 @@ Endpoint for data vendor to send Freckle beacon exit events.  All required field
 }
 ```
 ```
-200  Success - Message: OK
+200 Success - Message: OK
 401 Unauthorized - Message: Unauthorized
 400 Bad Request - Message: <<Field name invalid or missing>>
 500 Server Error - Message: Internal Server Error
@@ -234,12 +235,11 @@ Endpoint for data vendor to send Freckle device triggered visit events.  All req
 }
 ```
 ```
-200  Success - Message: OK
+200 Success - Message: OK
 401 Unauthorized - Message: Unauthorized
 400 Bad Request - Message: <<Field name invalid or missing>>
 500 Server Error - Message: Internal Server Error
 ```
-
 
 ## 2. Data Transfer Using SFTP
 
@@ -249,7 +249,22 @@ Secure FTP credentials will be provided to you by your account representative wh
 ### 2.2 Batch Data File Contents
 Customer data should NOT contain any information that does not comply with the Freckle IoT privacy policy.
 
-### 2.3 File Format
+### 2.3 Naming Your File
+Before uploading your data make sure that you are applying the following formatting rules when generating your files names and folder structure.
+
+```
+File Format:          gzip
+Filename Prefix:      <year>-<month>-<day>_
+Example:              2017-03-14_arbor_data.json.gz
+
+Data Format:          JSON or CSV
+Note:                 For CSV please have column name at the first line of each file.
+
+Folder Structure:     <year>/<month>/
+example:              2017/03/2017-03-14_arbor_data.json.gz
+```
+
+### 2.4 File Format
 Mobile location data must be formatted as text files, with one line per record and Tab characters delimited fields. Character encoding should be UTF-8. Lines should be terminated with the newline character (0xA). Carriage return characters (0xD) are permitted and can act as part of the line termination.
 The delimiter between the columns is comma (,). If a column can have multiple valid values, those values need to be delimited by a comma.
 
@@ -258,6 +273,8 @@ Recommended Device ID format is raw and un-hashed. If hashed values are provided
 To maximize data accuracy, each record must contain the following:
 *Unique Mobile Advertising ID, which represents the device and persists across files. For iOS this is the IDFA, for Android it is the AAID.
 *Geo data such as lat, long, horizontal accuracy, and timestamp of the event.
+
+## 2.5 Formatting Your Data
 
 The table below specifies all accepted fields and its format:
 
