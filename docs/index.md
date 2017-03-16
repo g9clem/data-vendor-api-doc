@@ -1,12 +1,12 @@
-##Data Processing
+## Data Processing
 
-###Secure FTP Site
+### Secure FTP Site
 Secure FTP credentials will be provided to you by your account representative when your account is created.
 
-###Batch Data File Contents
+### Batch Data File Contents
 Customer data should NOT contain any information that does not comply with the Freckle IoT privacy policy.
 
-###File Format
+### File Format
 Mobile location data must be formatted as text files, with one line per record and Tab characters delimited fields. Character encoding should be UTF-8. Lines should be terminated with the newline character (0xA). Carriage return characters (0xD) are permitted and can act as part of the line termination.
 The delimiter between the columns is comma (,). If a column can have multiple valid values, those values need to be delimited by a comma.
 
