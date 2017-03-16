@@ -249,7 +249,7 @@ Secure FTP credentials will be provided to you by your account representative wh
 ### 2.2 Batch Data File Contents
 Customer data should NOT contain any information that does not comply with the Freckle IoT privacy policy.
 
-## 2.3 Formatting Your Data
+### 2.3 Formatting Your Data
 
 The table below specifies all accepted fields and its format:
 
